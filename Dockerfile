@@ -44,12 +44,17 @@ aXRoIE15U1FMCiAgICAgIGNvc3Q6ICQ0MC4wMCBtb250aGx5CiAgICBwYXJhbWV0ZXJzOiAqX3Bh\
 cmFtcwo="
 
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E '%{rhel}').noarch.rpm && yum -y update && yum -y install python git python-pip && yum clean all
-RUN pip install --upgrade pip && pip install 'dopy>=0.3.7,<=0.3.7'
 
-RUN chown -R apb:0 /opt/apb && chmod -R g=u /opt/apb /etc/passwd
+RUN pip install --upgrade pip --user apb --cache-dir /tmp
+
+RUN pip install --user apb 'dopy>=0.3.7,<=0.3.7' --cache-dir /tmp
+
+
+
+
 
 COPY playbooks /opt/apb/actions
 COPY roles /opt/apb/actions/roles
-RUN chmod -R g=u /opt/{ansible,apb}
+#RUN chmod -R g=u /opt/{ansible,apb}
 USER apb
 ENV ANSIBLE_HOST_KEY_CHECKING false
